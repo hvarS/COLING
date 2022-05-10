@@ -50,6 +50,10 @@
 # print(out.shape)
 
 import pandas as pd
-df = pd.read_csv('Full_train.csv')
-df = df.iloc[:,5:]
-df.to_csv('Full_train.csv',index=False)
+trn_df = pd.read_csv('data/train.csv')
+val_df = pd.read_csv('data/val.csv')
+tst_df = pd.read_csv('data/test.csv')
+df = pd.concat([trn_df,val_df,tst_df],ignore_index=True)
+df.to_csv('data/all_data.csv',index=False)
+# df = df.iloc[:,5:]
+# df.to_csv('Full_train.csv',index=False)

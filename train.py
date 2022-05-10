@@ -15,7 +15,7 @@ from config import args
 from models.base_models import NCModel
 from optimizers.adabound import AdaBound
 
-os.environ["CUDA_VISIBLE_DEVICES"]="0"
+os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
 # Training settings
 parser = argparse.ArgumentParser()

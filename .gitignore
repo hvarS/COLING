@@ -1,2 +1,5 @@
 data/graph.gpickle
 MM/*
+saved_models/*.npy
+saved_models/*.pkl
+__pycache__
