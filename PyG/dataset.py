@@ -5,12 +5,14 @@ import os
 import pickle
 import glob
 import numpy as np
+from visual import create_pydot_viz
 import sys
 
 data = Data()
 
 ## Create Map for tweet_ids and usernames 
 tweet_id_to_index = {};username_to_index = {}
+index_to_username = {};index_to_tweet_id = {}
 trn_df = pd.read_csv(os.getcwd()+'/data/train.csv')
 val_df = pd.read_csv(os.getcwd()+'/data/val.csv')
 tst_df = pd.read_csv(os.getcwd()+'/data/test.csv')
@@ -24,10 +26,19 @@ usernames = list(df['user_name'].unique())
 index = 0
 for tweet_id in tweet_ids:
     tweet_id_to_index[tweet_id] = index
+    index_to_tweet_id[index] = tweet_id
     index += 1
+tweet_end = index
+data.tweet_nodes = range(index)
 for usr in usernames:
     username_to_index[usr] = index
+    index_to_username[index] = usr
     index += 1
+data.usr_nodes = range(tweet_end,index)
+data.idx2tweet = index_to_tweet_id
+data.idx2usr = index_to_username
+data.tweet_ids = tweet_ids
+data.usrs = usernames
 
 ## Node embeddings 
 total_nodes = len(tweet_ids)+len(usernames)
@@ -56,11 +67,13 @@ for key,value in feature_dict.items():
 data.x = x
 
 ## Node Labels 
+data.num_classes = 2
 y = torch.zeros(total_nodes,dtype = torch.long)
+torch.fill_(y,-1)
 for tweet_id in tweet_ids:
     label = df[df['tweet_id']==tweet_id]['label']
     y[tweet_id_to_index[tweet_id]] = label.iloc[0]
-
+# print(y.unique(return_counts=True))
 data.y = y
 
 ## Edge Connections 
@@ -120,3 +133,6 @@ for tweet_id in list(tst_df['tweet_id']):
 
 # print(sum(data.tst_mask)) 
 # print(data.num_node_features)
+
+#############Visualisation##############
+create_pydot_viz(data)
