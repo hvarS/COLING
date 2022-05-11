@@ -14,6 +14,8 @@ from models.gat import GAT
 from config import args
 from models.base_models import NCModel
 from optimizers.adabound import AdaBound
+from statistics import mean
+import optuna
 
 os.environ["CUDA_VISIBLE_DEVICES"]="2"
 
@@ -37,7 +39,7 @@ if args.model == 'GAT':
                 nhid=args.hidden, 
                 nclass=2, 
                 dropout=args.dropout, 
-                nheads=args.nb_heads, 
+                nheads=args.n_heads, 
                 alpha=args.alpha)
 elif args.model == 'HGCN':
     Model = NCModel
@@ -54,21 +56,27 @@ if args.cuda:
     dataset['labels'] = dataset['labels'].cuda()
 
 
-
-if __name__=="__main__":
-    t_total = time.time()
-    
+def objective(trial):
     # optimizer = optim.Adam(model.parameters(), 
     #                     lr=args.lr, 
     #                     weight_decay=args.weight_decay)
+    args.lr = trial.suggest_loguniform("lr", 1e-8, 1e-1)
     optimizer = AdaBound(model.parameters(),args.lr,gamma=args.gamma)
     loss_values = []
+    acc_scores = []
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer, args.gamma)
     engine = Engine(args,model,optimizer)
-    for epoch in range(1000):
+    for epoch in range(200):
         loss_values.append(engine.train(dataset))
         if epoch%100==0:
             acc_test=engine.compute_test(dataset)
-            torch.save(model.state_dict(), 'saved_models/{}.pkl'.format(acc_test))
+            acc_scores.append(acc_test.item())
+            # torch.save(model.state_dict(), 'saved_models/{}.pkl'.format(acc_test))
         scheduler.step()
+    return mean(acc_scores)
+
+
+if __name__=="__main__":
+    study = optuna.create_study(direction="maximize")
+    study.optimize(objective, n_trials=10)
     print("Optimization Finished!")

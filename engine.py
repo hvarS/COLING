@@ -70,5 +70,5 @@ class Engine:
         print("Test set results:",
             "loss= {:.4f}".format(loss_test),
             "accuracy= {:.4f}".format(acc_test))
-        np.save('saved_models/{}.npy'.format(acc_test), confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))          
+        # np.save('saved_models/{}.npy'.format(acc_test), confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))          
         return acc_test

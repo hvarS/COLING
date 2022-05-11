@@ -36,7 +36,7 @@ config_args = {
         'num-layers': (2, 'number of hidden layers in encoder'),
         'bias': (1, 'whether to use bias (1) or not (0)'),
         'act': ('relu', 'which activation function to use (or None for no activation)'),
-        'n-heads': (8, 'number of attention heads for graph attention networks, must be a divisor dim'),
+        'n_heads': (8, 'number of attention heads for graph attention networks, must be a divisor dim'),
         'alpha': (0.2, 'alpha for leakyrelu in graph attention networks'),
         'double-precision': ('0', 'whether to use double precision'),
         'use-att': (0, 'whether to use hyperbolic attention or not'),
@@ -58,7 +58,6 @@ parser.add_argument('--no_cuda', action='store_true', default=False, help='Disab
 parser.add_argument('--fastmode', action='store_true', default=False, help='Validate during training pass.')
 parser.add_argument('--weight_decay', type=float, default=5e-4, help='Weight decay (L2 loss on parameters).')
 parser.add_argument('--hidden', type=int, default=8, help='Number of hidden units.')
-parser.add_argument('--nb_heads', type=int, default=2, help='Number of head attentions.')
 
 for _, config_dict in config_args.items():
     parser = add_flags_from_config(parser, config_dict)
