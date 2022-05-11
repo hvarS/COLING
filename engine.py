@@ -63,10 +63,10 @@ class Engine:
         test_mask = dataset['test_mask']
         labels = dataset['labels']
         loss_test = F.nll_loss(output[tweet_mask][test_mask], labels[test_mask])
-        # print(classification_report(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
-        # print(confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
+        print(classification_report(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
+        print(confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
         acc_test = accuracy(output[tweet_mask][test_mask], labels[test_mask])
-        # print(accuracy_score(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
+        print(accuracy_score(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
         print("Test set results:",
             "loss= {:.4f}".format(loss_test),
             "accuracy= {:.4f}".format(acc_test))
