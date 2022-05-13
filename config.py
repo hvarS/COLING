@@ -3,7 +3,7 @@ from utils.train_utils import add_flags_from_config
 
 config_args = {
     'training_config': {
-        'lr': (0.001, 'learning rate'),
+        'lr': (0.00001, 'learning rate'),
         'dropout': (0.6, 'dropout probability'),
         'cuda': (0, 'which cuda device to use (-1 for cpu training)'),
         'epochs': (10000, 'maximum number of epochs to train for'),

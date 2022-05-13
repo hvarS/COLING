@@ -5,7 +5,7 @@ import os
 import pickle
 import glob
 import numpy as np
-from visual import create_pydot_viz
+from visual import create_gexf_graph, create_pydot_viz
 import sys
 
 data = Data()
@@ -135,4 +135,5 @@ for tweet_id in list(tst_df['tweet_id']):
 # print(data.num_node_features)
 
 #############Visualisation##############
-create_pydot_viz(data)
+# create_pydot_viz(data)
+create_gexf_graph(data)
