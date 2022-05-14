@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from utilities import accuracy
-from sklearn.metrics import confusion_matrix, classification_report, accuracy_score
+from sklearn.metrics import confusion_matrix, classification_report, accuracy_score, f1_score
 import sys
 
 class Engine:
@@ -66,9 +66,12 @@ class Engine:
         print(classification_report(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
         print(confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
         acc_test = accuracy(output[tweet_mask][test_mask], labels[test_mask])
+        pred = output.argmax(dim=1)
+        f1 = f1_score(labels[test_mask].detach().cpu().numpy(),pred[tweet_mask][test_mask].detach().cpu().numpy(), )
         print(accuracy_score(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))
         print("Test set results:",
             "loss= {:.4f}".format(loss_test),
-            "accuracy= {:.4f}".format(acc_test))
+            "accuracy= {:.4f}".format(acc_test),
+            "f1_score= {:.4f}".format(f1))
         # np.save('saved_models/{}.npy'.format(acc_test), confusion_matrix(labels[test_mask].cpu().numpy(),np.argmax(output[tweet_mask][test_mask].cpu().detach().numpy(),-1)))          
-        return acc_test
+        return acc_test,f1

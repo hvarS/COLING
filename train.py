@@ -64,16 +64,18 @@ def objective(trial):
     optimizer = AdaBound(model.parameters(),args.lr,gamma=args.gamma)
     loss_values = []
     acc_scores = []
+    f1_scores = []
     scheduler = optim.lr_scheduler.ExponentialLR(optimizer, args.gamma)
     engine = Engine(args,model,optimizer)
-    for epoch in range(200):
+    for epoch in range(1000):
         loss_values.append(engine.train(dataset))
         if epoch%100==0:
-            acc_test=engine.compute_test(dataset)
+            acc_test,f1=engine.compute_test(dataset)
             acc_scores.append(acc_test.item())
+            f1_scores.append(f1.item())
             # torch.save(model.state_dict(), 'saved_models/{}.pkl'.format(acc_test))
         scheduler.step()
-    return mean(acc_scores)
+    return mean(f1_scores)
 
 
 if __name__=="__main__":
